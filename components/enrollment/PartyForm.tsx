@@ -9,11 +9,20 @@ interface PartyFormProps {
 }
 
 export default function PartyForm({ value, onChange, placeholder, readOnly }: PartyFormProps) {
-  const handleSsn = (raw: string) => {
-    const digits = raw.replace(/[^0-9]/g, '');
-    const formatted = digits.length > 6 ? `${digits.slice(0, 6)}-${digits.slice(6, 13)}` : digits;
-    onChange({ ssn: formatted });
+  const handleSsnFront = (val: string) => {
+    const digits = val.replace(/[^0-9]/g, '');
+    const currentBack = value.ssn.split('-')[1] || '';
+    onChange({ ssn: currentBack ? `${digits}-${currentBack}` : digits });
   };
+
+  const handleSsnBack = (val: string) => {
+    const digits = val.replace(/[^0-9]/g, '');
+    const currentFront = value.ssn.split('-')[0] || '';
+    onChange({ ssn: `${currentFront}-${digits}` });
+  };
+
+  const ssnFront = value.ssn.split('-')[0] || '';
+  const ssnBack = value.ssn.split('-')[1] || '';
 
   return (
     <div className="flex flex-col gap-3">
@@ -30,15 +39,29 @@ export default function PartyForm({ value, onChange, placeholder, readOnly }: Pa
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">주민등록번호</label>
-        <input
-          type="text"
-          readOnly={readOnly}
-          maxLength={14}
-          className={`w-full border rounded-lg p-3 text-sm ${readOnly ? 'bg-gray-50 text-gray-700' : ''}`}
-          placeholder="000000-0000000"
-          value={value.ssn}
-          onChange={(e) => handleSsn(e.target.value)}
-        />
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            inputMode="numeric"
+            readOnly={readOnly}
+            maxLength={6}
+            className={`w-full border rounded-lg p-3 text-sm ${readOnly ? 'bg-gray-50 text-gray-700' : ''}`}
+            placeholder="앞 6자리"
+            value={ssnFront}
+            onChange={(e) => handleSsnFront(e.target.value)}
+          />
+          <span className="text-gray-400">-</span>
+          <input
+            type={readOnly ? "password" : "password"}
+            inputMode="numeric"
+            readOnly={readOnly}
+            maxLength={7}
+            className={`w-full border rounded-lg p-3 text-sm ${readOnly ? 'bg-gray-50 text-gray-700' : ''}`}
+            placeholder="뒤 7자리"
+            value={ssnBack}
+            onChange={(e) => handleSsnBack(e.target.value)}
+          />
+        </div>
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">휴대폰 번호</label>
