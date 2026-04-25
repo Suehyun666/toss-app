@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getProducts, changeProductStatus } from "@/services/products";
+import { getProducts, changeProductStatus } from "@/queries/products";
 
 const STAGES = ["KIDI_CONFIRMED", "FSS_APPLIED", "FSS_APPROVED"] as const;
 

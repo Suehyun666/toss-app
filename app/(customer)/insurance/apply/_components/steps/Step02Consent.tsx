@@ -1,18 +1,12 @@
 'use client';
 import { useEnrollmentStore } from '@/store/enrollmentStore';
-
-const REQUIRED_ITEMS = [
-  { key: 'personal',   label: '[필수] 개인정보 수집·이용 동의' },
-  { key: 'thirdParty', label: '[필수] 개인정보 제3자 제공 동의' },
-  { key: 'credit',     label: '[필수] 개인신용정보 조회·이용 동의' },
-  { key: 'marketing',  label: '[필수] 보험계약 관련 마케팅 수신 동의' },
-];
+import { REQUIRED_CONSENT_ITEMS } from '@/types/enrollmentConstants';
 
 export default function Step02Consent() {
   const { consentRequired, consentOptional, setConsentRequired, setConsentAll, setConsentOptional, nextStep, prevStep } =
     useEnrollmentStore();
 
-  const allRequiredChecked = REQUIRED_ITEMS.every((item) => consentRequired[item.key]);
+  const allRequiredChecked = REQUIRED_CONSENT_ITEMS.every((item) => consentRequired[item.key]);
   const isValid = allRequiredChecked;
 
   return (
@@ -33,7 +27,7 @@ export default function Step02Consent() {
           <span className="font-semibold text-sm">전체 동의</span>
         </label>
         <div className="divide-y">
-          {REQUIRED_ITEMS.map((item) => (
+          {REQUIRED_CONSENT_ITEMS.map((item) => (
             <label key={item.key} className="flex items-center gap-3 p-4 cursor-pointer">
               <input
                 type="checkbox"

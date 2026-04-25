@@ -2,26 +2,26 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getProducts, deleteProduct } from "@/services/products";
+import { getProducts, deleteProduct } from "@/queries/products";
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-    DESIGNING:      { label: "설계 중",           color: "bg-gray-100 text-gray-600" },
-    KIDI_SUBMITTED: { label: "보험개발원 제출",    color: "bg-orange-100 text-orange-600" },
-    KIDI_CONFIRMED: { label: "요율확인서 수령",    color: "bg-yellow-100 text-yellow-700" },
-    FSS_APPLIED:    { label: "금감원 인가신청",    color: "bg-blue-100 text-blue-600" },
-    FSS_APPROVED:   { label: "금감원 인가완료",    color: "bg-indigo-100 text-indigo-600" },
-    FILING:         { label: "판매신고 중",        color: "bg-purple-100 text-purple-600" },
-    FILED:          { label: "판매 확정",          color: "bg-teal-100 text-teal-700" },
-    ON_SALE:        { label: "판매 중",            color: "bg-green-100 text-green-700" },
-    DISCONTINUED:   { label: "판매 중단",          color: "bg-red-100 text-red-600" },
+    DESIGNING: { label: "설계 중", color: "bg-gray-100 text-gray-600" },
+    KIDI_SUBMITTED: { label: "보험개발원 제출", color: "bg-orange-100 text-orange-600" },
+    KIDI_CONFIRMED: { label: "요율확인서 수령", color: "bg-yellow-100 text-yellow-700" },
+    FSS_APPLIED: { label: "금감원 인가신청", color: "bg-blue-100 text-blue-600" },
+    FSS_APPROVED: { label: "금감원 인가완료", color: "bg-indigo-100 text-indigo-600" },
+    FILING: { label: "판매신고 중", color: "bg-purple-100 text-purple-600" },
+    FILED: { label: "판매 확정", color: "bg-teal-100 text-teal-700" },
+    ON_SALE: { label: "판매 중", color: "bg-green-100 text-green-700" },
+    DISCONTINUED: { label: "판매 중단", color: "bg-red-100 text-red-600" },
 };
 
 const LOB_LABELS: Record<string, string> = {
-    PERSONAL_AUTO:   "개인용자동차보험",
+    PERSONAL_AUTO: "개인용자동차보험",
     COMMERCIAL_AUTO: "업무용자동차보험",
-    BUSINESS_AUTO:   "영업용자동차보험",
-    MOTORCYCLE:      "이륜자동차보험",
-    AGRICULTURAL:    "농기계보험",
+    BUSINESS_AUTO: "영업용자동차보험",
+    MOTORCYCLE: "이륜자동차보험",
+    AGRICULTURAL: "농기계보험",
 };
 
 export default function ProductListPage() {

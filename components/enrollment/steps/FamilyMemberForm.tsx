@@ -3,12 +3,7 @@ import { useEnrollmentStore } from '@/store/enrollmentStore';
 import { calcAgeFromBirthYear } from '@/utils/format';
 import type { FamilyMember } from '@/types/enrollment';
 
-const RELATIONS = [
-  { value: 'SPOUSE', label: '배우자' },
-  { value: 'PARENT', label: '부모' },
-  { value: 'CHILD',  label: '자녀' },
-  { value: 'OTHER',  label: '기타' },
-] as const;
+import { FAMILY_RELATIONS } from '@/types/enrollmentConstants';
 
 export default function FamilyMemberForm() {
   const { driverScope, familyMembers, setFamilyMembers } = useEnrollmentStore();
@@ -62,7 +57,7 @@ export default function FamilyMemberForm() {
         <div key={member.id} className="bg-gray-50 rounded-lg p-3 flex flex-col gap-3">
           <div className="flex justify-between items-center">
             <span className="text-xs font-medium text-gray-600">
-              {RELATIONS.find((r) => r.value === member.relation)?.label}
+              {FAMILY_RELATIONS.find((r) => r.value === member.relation)?.label}
             </span>
             <button onClick={() => removeMember(member.id)} className="text-xs text-red-400">삭제</button>
           </div>
@@ -77,7 +72,7 @@ export default function FamilyMemberForm() {
                   value={member.relation}
                   onChange={(e) => updateMember(member.id, { relation: e.target.value as FamilyMember['relation'] })}
                 >
-                  {RELATIONS.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
+                  {FAMILY_RELATIONS.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
                 </select>
               </div>
             )}

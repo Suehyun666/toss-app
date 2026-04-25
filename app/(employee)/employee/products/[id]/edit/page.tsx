@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useProductEditData, useUpdateProduct } from "@/queries/product.query";
+import { useProductEditData, useUpdateProduct } from "@/queries/products";
 import { useProductEditForm } from "@/hooks/useProductEditForm";
 import { StepIndicator } from "@/components/common/ui/StepIndicator";
 import { Step0BasicInfo } from "./_components/Step0BasicInfo";

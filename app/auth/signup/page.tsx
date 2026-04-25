@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signup } from "@/services/auth";
-import { ApiError } from "@/services/api";
+import { signup } from "@/queries/auth";
+import { ApiError } from "@/queries/api";
 
 export default function SignupPage() {
     const [name, setName] = useState("");

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getExclusions, deleteExclusion } from "@/services/master";
+import { getExclusions, deleteExclusion } from "@/queries/master";
 
 export default function ExclusionListPage() {
     const [list, setList] = useState<any[]>([]);

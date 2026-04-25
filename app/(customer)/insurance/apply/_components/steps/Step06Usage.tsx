@@ -1,11 +1,6 @@
 'use client';
 import { useEnrollmentStore } from '@/store/enrollmentStore';
-
-const PURPOSES = [
-  { value: 'COMMUTE',  label: '출퇴근/가정용', desc: '직장 통학 및 일상 가정 생활 목적' },
-  { value: 'BUSINESS', label: '업무용',       desc: '사업 목적의 운행 포함' },
-  { value: 'DELIVERY', label: '영업용',       desc: '배달·운수업 등 유상 운송' },
-] as const;
+import { VEHICLE_PURPOSES } from '@/types/enrollmentConstants';
 
 export default function Step06Usage() {
   const { mileageDiscount, vehiclePurpose, setUsage, nextStep, prevStep } = useEnrollmentStore();
@@ -37,7 +32,7 @@ export default function Step06Usage() {
       <div>
         <p className="text-sm font-medium mb-2">운행 용도</p>
         <div className="flex flex-col gap-2">
-          {PURPOSES.map((p) => (
+          {VEHICLE_PURPOSES.map((p) => (
             <label
               key={p.value}
               className={`flex items-start gap-3 p-4 border rounded-xl cursor-pointer transition-colors ${

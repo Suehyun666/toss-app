@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { getExclusions } from "@/services/master";
+import { getExclusions } from "@/queries/master";
 
 const TYPE_COLORS: Record<string, string> = {
     INTENTIONAL:   "bg-red-100 text-red-700",

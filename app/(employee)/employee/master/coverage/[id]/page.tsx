@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getCoverage, getProvisionItems } from "@/services/master";
+import { getCoverage, getProvisionItems } from "@/queries/master";
 import { COVERAGE_TYPES, LIMIT_TYPES, DEDUCTIBLE_TYPES, LIMIT_UNITS, COMPENSATION_TYPES, LIMIT_DETAIL_TYPES } from "@/types/master";
 import Link from "next/link";
 

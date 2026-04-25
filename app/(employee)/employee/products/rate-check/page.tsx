@@ -2,19 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getProducts, changeProductStatus } from "@/services/products";
+import { getProducts, changeProductStatus } from "@/queries/products";
 
 const STAGES = ["DESIGNING", "KIDI_SUBMITTED", "KIDI_CONFIRMED"] as const;
 
 const STATUS_META = {
-    DESIGNING:      { label: "설계 중",        color: "text-gray-600",   bg: "bg-gray-100",   step: 1 },
+    DESIGNING: { label: "설계 중", color: "text-gray-600", bg: "bg-gray-100", step: 1 },
     KIDI_SUBMITTED: { label: "보험개발원 제출", color: "text-orange-600", bg: "bg-orange-100", step: 2 },
     KIDI_CONFIRMED: { label: "요율확인서 수령", color: "text-yellow-700", bg: "bg-yellow-100", step: 3 },
 };
 
 export default function RateCheckPage() {
     const [products, setProducts] = useState<any[]>([]);
-    const [loading, setLoading]   = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const load = async () => {
         const all = await getProducts();
@@ -44,9 +44,9 @@ export default function RateCheckPage() {
             <div className="bg-white border border-gray-200 rounded-xl p-5">
                 <div className="flex items-center gap-0">
                     {[
-                        { step: 1, label: "설계 완료",        sub: "상품 설계 완료 후 제출 대기" },
-                        { step: 2, label: "보험개발원 제출",   sub: "요율확인서 발급 대기 중" },
-                        { step: 3, label: "요율확인서 수령",   sub: "인가신청 단계로 이동 가능" },
+                        { step: 1, label: "설계 완료", sub: "상품 설계 완료 후 제출 대기" },
+                        { step: 2, label: "보험개발원 제출", sub: "요율확인서 발급 대기 중" },
+                        { step: 3, label: "요율확인서 수령", sub: "인가신청 단계로 이동 가능" },
                     ].map((s, i) => (
                         <div key={s.step} className="flex items-center">
                             <div className="flex flex-col items-center w-36 px-2">

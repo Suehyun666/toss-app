@@ -1,5 +1,6 @@
 'use client';
 import { useEnrollmentStore } from '@/store/enrollmentStore';
+import { PhoneInput } from '@/components/forms/PhoneInput';
 
 export default function Step01OwnerInfo() {
   const { ownerName, ownerSsnFront, ownerSsnBack, ownerPhone, setOwner, nextStep } =
@@ -57,12 +58,9 @@ export default function Step01OwnerInfo() {
 
         <div>
           <label className="block text-sm font-medium mb-1">휴대폰 번호</label>
-          <input
-            type="tel"
-            className="w-full border rounded-lg p-3 text-sm"
-            placeholder="010-1234-5678"
+          <PhoneInput
             value={ownerPhone}
-            onChange={(e) => setOwner({ ownerPhone: e.target.value })}
+            onChange={(val) => setOwner({ ownerPhone: val })}
           />
         </div>
       </div>

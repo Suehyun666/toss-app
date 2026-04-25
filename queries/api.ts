@@ -29,7 +29,7 @@ function handleAuthFailure() {
     }
 }
 
-function getCookie(name: string): string | null {
+export function getCookie(name: string): string | null {
     if (typeof document === "undefined") return null;
     const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
     return match ? decodeURIComponent(match[1]) : null;
@@ -61,12 +61,19 @@ async function refreshAccessToken(): Promise<string> {
 }
 
 async function request(path: string, options: RequestInit): Promise<any> {
+    const token = getCookie("access_token");
+    const headers: any = { ...options.headers };
+    if (token && !headers.Authorization) {
+        headers.Authorization = `Bearer ${token}`;
+    }
+    
+    if (!(options.body instanceof FormData)) {
+        headers["Content-Type"] = headers["Content-Type"] || "application/json";
+    }
+
     const res = await fetch(`${BASE_URL}${path}`, {
         ...options,
-        // FormData이면 브라우저가 Content-Type + boundary를 자동으로 세팅하므로 강제하지 않음
-        headers: options.body instanceof FormData
-            ? { ...options.headers }
-            : { "Content-Type": "application/json", ...options.headers },
+        headers,
     });
     if (!res.ok) {
         let errorData: any = {};

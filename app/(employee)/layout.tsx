@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { setAuthFailureHandler } from "@/services/api";
+import { setAuthFailureHandler } from "@/queries/api";
 
 const menu = [
     {

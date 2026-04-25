@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { getProduct, deleteProduct } from "@/services/products";
+import { getProduct, deleteProduct } from "@/queries/products";
 import ProductBasicInfo    from "../_components/ProductBasicInfo";
 import ProductCoverages    from "../_components/ProductCoverages";
 import ProductRiders       from "../_components/ProductRiders";

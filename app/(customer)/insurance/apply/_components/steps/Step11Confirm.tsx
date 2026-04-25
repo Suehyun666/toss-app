@@ -1,72 +1,23 @@
 'use client';
-import { useState, useEffect } from 'react';
 import { useEnrollmentStore } from '@/store/enrollmentStore';
+import { useProposalSubmit } from '@/hooks/useProposalSubmit';
 import { formatMoney, maskSsn } from '@/utils/format';
 import { StepHeader } from '@/components/common/ui/StepHeader';
 import { DataSection, DataRow } from '@/components/common/ui/DataViewer';
 import { ConfirmResultView } from '@/components/enrollment/steps/ConfirmResultView';
 
 export default function Step11Confirm() {
-  const {
-    vehicleInfo, carNumber, driverScope, driverMinAge,
-    insured, contractor, isSamePerson,
-    verificationToken, quote,
-    proposalId, policyNo, setProposal, prevStep,
-  } = useEnrollmentStore();
+  const { prevStep } = useEnrollmentStore();
+  const { 
+    handleSubmit, submitting, polling, status, error, 
+    quote, policyNo, isSamePerson, insured, contractor, 
+    carNumber, vehicleInfo, driverScope, driverMinAge 
+  } = useProposalSubmit();
 
-  const [submitting, setSubmitting] = useState(false);
-  const [polling, setPolling] = useState(false);
-  const [status, setStatus] = useState<string | null>(null);
-  const [error, setError] = useState('');
-  const q = quote!;
-
-  const callProxy = async (path: string, method: string, body?: object) => {
-    const res = await fetch('/api/proxy', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ path, method, body }),
-    });
-    return res.json();
-  };
-
-  const handleSubmit = async () => {
-    setSubmitting(true);
-    setError('');
-    try {
-      const contractorInfo = isSamePerson ? insured : contractor;
-      const data = await callProxy('/proposals', 'POST', {
-        productId: 1, verifyToken: verificationToken, quoteSnapshot: q,
-        insuredName: insured.name, insuredSsn: insured.ssn.replace(/-/g, ''), insuredPhone: insured.phone,
-        contractorName: contractorInfo.name, contractorSsn: contractorInfo.ssn.replace(/-/g, ''), contractorPhone: contractorInfo.phone,
-        isSamePerson, carNumber, driverScope, driverMinAge,
-      });
-      setProposal(data.proposalId);
-      setStatus(data.status);
-      setPolling(true);
-    } catch {
-      setError('청약 제출에 실패했습니다.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  useEffect(() => {
-    if (!polling || !proposalId) return;
-    const id = setInterval(async () => {
-      try {
-        const data = await callProxy(`/proposals/${proposalId}`, 'GET');
-        setStatus(data.status);
-        if (['APPROVED', 'SUPPLEMENT_REQUIRED', 'REJECTED'].includes(data.status)) {
-          setPolling(false);
-          if (data.policyNo) setProposal(proposalId, data.policyNo);
-        }
-      } catch { }
-    }, 1000);
-    return () => clearInterval(id);
-  }, [polling, proposalId]);
+  if (!quote) return null;
 
   if (polling || status) {
-    return <ConfirmResultView status={status} polling={polling} policyNo={policyNo ?? undefined} quoteTotalPremium={q?.totalPremium} />;
+    return <ConfirmResultView status={status} polling={polling} policyNo={policyNo ?? undefined} quoteTotalPremium={quote?.totalPremium} />;
   }
 
   const contractorInfo = isSamePerson ? insured : contractor;
@@ -97,11 +48,11 @@ export default function Step11Confirm() {
       )}
 
       <DataSection title="보험료 (일시납)">
-        <DataRow label="할인 전" value={formatMoney(q.totalBeforeDiscount)} />
-        <DataRow label="할인 합계" value={formatMoney(q.totalDiscount)} />
+        <DataRow label="할인 전" value={formatMoney(quote.totalBeforeDiscount)} />
+        <DataRow label="할인 합계" value={formatMoney(quote.totalDiscount)} />
         <div className="flex justify-between items-center px-4 py-3 bg-blue-50">
           <span className="text-sm font-bold">최종 보험료</span>
-          <span className="text-base font-bold text-blue-600">{formatMoney(q.totalPremium)}</span>
+          <span className="text-base font-bold text-blue-600">{formatMoney(quote.totalPremium)}</span>
         </div>
       </DataSection>
 

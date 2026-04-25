@@ -8,12 +8,7 @@ import { StepHeader } from '@/components/common/ui/StepHeader';
 import { StepNavigation } from '@/components/common/ui/StepNavigation';
 import FamilyMemberForm from '@/components/enrollment/steps/FamilyMemberForm';
 
-const SCOPES: { value: DriverScope; label: string; desc: string }[] = [
-  { value: 'NAMED_ONLY', label: '본인 한정',  desc: '기명피보험자(본인)만 운전' },
-  { value: 'COUPLE',     label: '부부 한정',  desc: '기명피보험자 및 배우자' },
-  { value: 'FAMILY',     label: '가족 한정',  desc: '기명피보험자 및 배우자·부모·자녀' },
-  { value: 'ALL',        label: '누구나',     desc: '운전자 제한 없음' },
-];
+import { DRIVER_SCOPES } from '@/types/enrollmentConstants';
 
 export default function Step07DriverScope() {
   const {
@@ -57,7 +52,7 @@ export default function Step07DriverScope() {
       />
 
       <div className="flex flex-col gap-2">
-        {SCOPES.map((s) => (
+        {DRIVER_SCOPES.map((s) => (
           <label
             key={s.value}
             className={`flex items-start gap-3 p-4 border rounded-xl cursor-pointer transition-colors ${

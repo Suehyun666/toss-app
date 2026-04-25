@@ -1,18 +1,18 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { getProducts } from "@/services/products";
+import { getProducts } from "@/queries/products";
 
 export default function DashboardPage() {
     const [products, setProducts] = useState<any[]>([]);
 
     useEffect(() => {
-        getProducts().then(setProducts).catch(() => {});
+        getProducts().then(setProducts).catch(() => { });
     }, []);
 
-    const onSale      = products.filter(p => p.status === "ON_SALE").length;
-    const inProgress  = products.filter(p => !["ON_SALE","DISCONTINUED","DESIGNING"].includes(p.status)).length;
-    const designing   = products.filter(p => p.status === "DESIGNING").length;
+    const onSale = products.filter(p => p.status === "ON_SALE").length;
+    const inProgress = products.filter(p => !["ON_SALE", "DISCONTINUED", "DESIGNING"].includes(p.status)).length;
+    const designing = products.filter(p => p.status === "DESIGNING").length;
 
     return (
         <div className="max-w-5xl space-y-8">
@@ -24,9 +24,9 @@ export default function DashboardPage() {
             {/* 상품 현황 요약 */}
             <div className="grid grid-cols-3 gap-4">
                 {[
-                    { label: "판매 중",      value: onSale,     color: "text-green-600",  sub: "현재 판매 중인 상품" },
-                    { label: "인허가 진행",  value: inProgress, color: "text-blue-600",   sub: "심사·신고 진행 중" },
-                    { label: "설계 중",      value: designing,  color: "text-gray-600",   sub: "검토 전 상품" },
+                    { label: "판매 중", value: onSale, color: "text-green-600", sub: "현재 판매 중인 상품" },
+                    { label: "인허가 진행", value: inProgress, color: "text-blue-600", sub: "심사·신고 진행 중" },
+                    { label: "설계 중", value: designing, color: "text-gray-600", sub: "검토 전 상품" },
                 ].map(s => (
                     <div key={s.label} className="bg-white border border-gray-200 rounded-xl p-5">
                         <p className="text-xs text-gray-400 mb-1">{s.label}</p>

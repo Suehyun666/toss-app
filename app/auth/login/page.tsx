@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { login } from "@/services/auth";
-import { ApiError } from "@/services/api";
+import { login } from "@/queries/auth";
+import { ApiError } from "@/queries/api";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");

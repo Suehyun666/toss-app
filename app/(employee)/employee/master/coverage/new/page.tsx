@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getCoverages, createCoverage } from "@/services/master";
+import { getCoverages, createCoverage } from "@/queries/master";
 import CoverageFormFields from "@/components/master/CoverageFormFields";
 
 const emptyForm = () => ({

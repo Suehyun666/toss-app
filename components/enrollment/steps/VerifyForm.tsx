@@ -1,13 +1,9 @@
 'use client';
 import { useState } from 'react';
 import { useEnrollmentStore } from '@/store/enrollmentStore';
+import { fetchApi } from '@/queries/api';
 
-const METHODS = [
-  { value: 'PHONE', label: '문자(SMS)' },
-  { value: 'KAKAO', label: '카카오' },
-  { value: 'TOSS',  label: '토스' },
-  { value: 'PASS',  label: 'PASS' },
-] as const;
+import { VERIFICATION_METHODS } from '@/types/enrollmentConstants';
 
 export default function VerifyForm() {
   const {
@@ -23,12 +19,10 @@ export default function VerifyForm() {
   const [sent, setSent] = useState(false);
 
   const callProxy = async (path: string, method: string, body?: object) => {
-    const res = await fetch('/api/proxy', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ path, method, body }),
+    return fetchApi(path, {
+      method,
+      body: body ? JSON.stringify(body) : undefined,
     });
-    return res.json();
   };
 
   const handleSend = async () => {
@@ -76,7 +70,7 @@ export default function VerifyForm() {
       <div>
         <p className="text-sm font-medium mb-2">인증 방법 선택</p>
         <div className="grid grid-cols-4 gap-2">
-          {METHODS.map((m) => (
+          {VERIFICATION_METHODS.map((m) => (
             <button
               key={m.value}
               onClick={() => setVerificationMethod(m.value)}

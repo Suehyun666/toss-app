@@ -85,7 +85,7 @@ const INITIAL_STATE: EnrollmentState = {
   hasAdvancedSafety: false,
   mileageDiscount: false,
   vehiclePurpose: 'COMMUTE',
-  driverScope: 'ALL',
+  driverScope: 'NAMED_ONLY',
   driverMinAge: 0,
   familyMembers: [],
   selectedAdjustments: [],

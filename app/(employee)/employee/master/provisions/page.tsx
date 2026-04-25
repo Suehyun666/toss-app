@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getProvisions, deleteProvision } from "@/services/master";
+import { getProvisions, deleteProvision } from "@/queries/master";
 
 export default function ProvisionsListPage() {
     const [list, setList] = useState<any[]>([]);
