@@ -14,10 +14,19 @@ export default function LoginPage() {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await login({ email, password });
-            document.cookie = "is_logged_in=true; path=/; max-age=86400"; // 1 day
-            router.push("/");
-            router.refresh(); // Force refresh to update header state
+            const res = await login({ email, password });
+            const maxAge = 86400;
+            document.cookie = `is_logged_in=true; path=/; max-age=${maxAge}`;
+            document.cookie = `user_role=${res.role}; path=/; max-age=${maxAge}`;
+            document.cookie = `access_token=${encodeURIComponent(res.accessToken)}; path=/; max-age=${maxAge}`;
+            document.cookie = `refresh_token=${encodeURIComponent(res.refreshToken)}; path=/; max-age=${maxAge * 7}`;
+
+            if (res.role === "ADMIN" || res.role === "EMPLOYEE") {
+                router.push("/employee/dashboard");
+            } else {
+                router.push("/");
+            }
+            router.refresh();
         } catch (error) {
             if (error instanceof ApiError) {
                 alert(`로그인 실패: ${error.message}`);
@@ -33,35 +42,35 @@ export default function LoginPage() {
             <form onSubmit={handleLogin} className="flex flex-col gap-4">
                 <div>
                     <label className="block text-sm font-medium mb-1">이메일</label>
-                    <input 
-                        type="email" 
-                        required 
+                    <input
+                        type="text"
+                        required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full border p-2 rounded"
-                        placeholder="example@email.com"
+                        placeholder="이메일 또는 ID"
                     />
                 </div>
                 <div>
                     <label className="block text-sm font-medium mb-1">비밀번호</label>
-                    <input 
-                        type="password" 
-                        required 
+                    <input
+                        type="password"
+                        required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="w-full border p-2 rounded"
                         placeholder="비밀번호 입력"
                     />
                 </div>
-                <button 
-                    type="submit" 
+                <button
+                    type="submit"
                     className="w-full bg-blue-500 text-white font-bold p-3 rounded mt-2 hover:bg-blue-600 transition"
                 >
                     로그인
                 </button>
             </form>
             <div className="text-center mt-4 text-sm text-gray-500">
-                계정이 없으신가요? 
+                계정이 없으신가요?
                 <Link href="/auth/signup" className="text-blue-500 underline ml-2">회원가입</Link>
             </div>
         </main>

@@ -11,7 +11,8 @@ body {
 }
 
 
-button {
+/* submit 버튼 (토스 스타일) */
+button[type="submit"], button.btn-primary {
   width: 100%;
   padding: 0.875rem;
   background: #3182f6;
@@ -24,9 +25,25 @@ button {
   margin-top: 1rem;
 }
 
-button:disabled {
+button[type="submit"]:disabled, button.btn-primary:disabled {
   background: #c8d8f0;
   cursor: not-allowed;
+}
+
+/* 인라인/아이콘 버튼은 기본 리셋 — @layer base에 넣어야 Tailwind 유틸리티가 덮어씀 */
+@layer base {
+  button[type="button"] {
+    width: auto;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    border: none;
+    border-radius: 0;
+    margin-top: 0;
+    cursor: pointer;
+  }
 }
 
 #payment-method,
@@ -37,6 +54,27 @@ button:disabled {
 #payment-method iframe,
 #agreement iframe {
   width: 100% !important;
+}
+
+/* 마스터 폼 공통 */
+@layer components {
+  .label {
+    display: block;
+    font-size: .75rem;
+    font-weight: 500;
+    color: #6b7280;
+    margin-bottom: 4px;
+  }
+  .input {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: .875rem;
+    outline: none;
+    background: white;
+  }
+  .input:focus { border-color: #3b82f6; }
 }
 
 /* 랜딩 페이지 */

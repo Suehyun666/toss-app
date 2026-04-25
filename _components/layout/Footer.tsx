@@ -1,4 +1,16 @@
+'use client';
+import { useEffect, useState } from 'react';
+
 export default function Footer() {
+  const [isEmployee, setIsEmployee] = useState(false);
+  useEffect(() => {
+    const match = document.cookie.match(/(?:^|; )user_role=([^;]*)/);
+    const role = match ? decodeURIComponent(match[1]) : null;
+    setIsEmployee(role === 'EMPLOYEE' || role === 'ADMIN');
+  }, []);
+
+  if (isEmployee) return null;
+
   return (
     <footer className="w-full bg-slate-50 border-t mt-auto">
       <div className="max-w-5xl mx-auto px-4 py-10">
