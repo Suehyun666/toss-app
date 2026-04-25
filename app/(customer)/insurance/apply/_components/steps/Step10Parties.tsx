@@ -51,9 +51,6 @@ export default function Step10Parties() {
           onChange={setInsured}
           placeholder={{ name: ownerName, phone: ownerPhone }}
         />
-        {insured.ssn && (
-          <p className="text-xs text-gray-400 mt-1 px-1">주민번호: {maskSsn(insured.ssn.replace(/-/g, ''))}</p>
-        )}
       </section>
 
       <label className="flex items-center gap-3 p-4 border rounded-xl cursor-pointer">
