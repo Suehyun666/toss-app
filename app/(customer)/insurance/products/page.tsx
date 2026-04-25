@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useOnSaleProducts } from '@/lib/queries/products';
+import { useOnSaleProducts } from '@/queries/products';
 import type { ProductCatalogItem } from '@/types/product';
 
 export default function ProductsPage() {

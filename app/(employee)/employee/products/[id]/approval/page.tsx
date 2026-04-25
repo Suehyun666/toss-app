@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
     getProduct, changeProductStatus,
     addProductDocument, deleteProductDocument, downloadProductDocument,
-} from "@/lib/products";
+} from "@/services/products";
 
 // ── 상수 ──────────────────────────────────────────────────────────────────────
 const STATUS_FLOW = [

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getRider, updateRider, deleteRider } from "@/lib/master";
+import { getRider, updateRider, deleteRider } from "@/services/master";
 import RiderFormFields from "@/components/master/RiderFormFields";
 
 function toForm(r: any) {

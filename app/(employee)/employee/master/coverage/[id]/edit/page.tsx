@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getCoverage, updateCoverage, deleteCoverage } from "@/lib/master";
+import { getCoverage, updateCoverage, deleteCoverage } from "@/services/master";
 import CoverageFormFields from "@/components/master/CoverageFormFields";
 
 function toForm(c: any) {

@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useOnSaleProduct } from '@/lib/queries/products';
+import { useOnSaleProduct } from '@/queries/products';
 import type { ProductRider, ProductAdjustment } from '@/types/product';
 
 export default function ProductDetailPage() {

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getCoverages, getRiders } from "@/lib/master";
-import { createProduct } from "@/lib/products";
+import { getCoverages, getRiders } from "@/services/master";
+import { createProduct } from "@/services/products";
 
 const STEPS = ["기본정보", "담보 선택", "특약 선택", "할인·할증"];
 

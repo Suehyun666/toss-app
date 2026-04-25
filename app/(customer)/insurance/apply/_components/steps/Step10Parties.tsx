@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { useEnrollmentStore } from '@/store/enrollmentStore';
 import { maskSsn } from '@/utils/format';
 import PartyForm from '@/components/enrollment/PartyForm';
+import { StepHeader } from '@/components/common/ui/StepHeader';
+import { StepNavigation } from '@/components/common/ui/StepNavigation';
 
 export default function Step10Parties() {
   const {
@@ -12,7 +14,6 @@ export default function Step10Parties() {
     nextStep, prevStep,
   } = useEnrollmentStore();
 
-  // 첫 진입 시 소유자 정보로 피보험자 자동 채우기
   useEffect(() => {
     if (!insured.name && ownerName) {
       setInsured({
@@ -21,7 +22,7 @@ export default function Step10Parties() {
         phone: ownerPhone,
       });
     }
-  }, []);
+  }, [insured.name, ownerName, ownerSsnFront, ownerSsnBack, ownerPhone, setInsured]);
 
   const isInsuredValid =
     insured.name.trim().length >= 2 &&
@@ -38,12 +39,11 @@ export default function Step10Parties() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h2 className="text-xl font-bold">계약자·피보험자 정보</h2>
-        <p className="text-sm text-gray-500 mt-1">보험계약에 필요한 당사자 정보를 확인·입력해 주세요.</p>
-      </div>
+      <StepHeader 
+        title="계약자·피보험자 정보" 
+        description="보험계약에 필요한 당사자 정보를 확인·입력해 주세요." 
+      />
 
-      {/* 피보험자 */}
       <section>
         <h3 className="text-sm font-semibold text-gray-700 mb-3">피보험자 (차량 소유자)</h3>
         <PartyForm
@@ -56,7 +56,6 @@ export default function Step10Parties() {
         )}
       </section>
 
-      {/* 계약자 = 피보험자 여부 */}
       <label className="flex items-center gap-3 p-4 border rounded-xl cursor-pointer">
         <input
           type="checkbox"
@@ -70,7 +69,6 @@ export default function Step10Parties() {
         </div>
       </label>
 
-      {/* 계약자 별도 입력 */}
       {!isSamePerson && (
         <section>
           <h3 className="text-sm font-semibold text-gray-700 mb-3">계약자 (보험료 납부자)</h3>
@@ -78,10 +76,7 @@ export default function Step10Parties() {
         </section>
       )}
 
-      <div className="flex gap-3">
-        <button onClick={prevStep} className="flex-1 border border-gray-300 text-gray-700 font-semibold p-4 rounded-xl">이전</button>
-        <button disabled={!isValid} onClick={nextStep} className="flex-1 bg-blue-500 disabled:bg-gray-300 text-white font-semibold p-4 rounded-xl">다음</button>
-      </div>
+      <StepNavigation onPrev={prevStep} onNext={nextStep} nextDisabled={!isValid} />
     </div>
   );
 }

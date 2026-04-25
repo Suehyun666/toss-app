@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getProducts, changeProductStatus } from "@/lib/products";
+import { getProducts, changeProductStatus } from "@/services/products";
 
 const STAGES = ["FSS_APPROVED", "FILING", "FILED", "ON_SALE", "DISCONTINUED"] as const;
 

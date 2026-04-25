@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getBaseRates, getBaseRateStats, deleteBaseRate } from "@/lib/master";
+import { getBaseRates, getBaseRateStats, deleteBaseRate } from "@/services/master";
 import { RATE_TYPES, STAT_TYPES } from "@/types/master";
 
 const rateLabel = (v: string) => RATE_TYPES.find(r => r.value === v)?.label ?? v;

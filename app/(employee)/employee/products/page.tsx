@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getProducts, deleteProduct } from "@/lib/products";
+import { getProducts, deleteProduct } from "@/services/products";
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
     DESIGNING:      { label: "설계 중",           color: "bg-gray-100 text-gray-600" },

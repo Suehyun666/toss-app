@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { getRider, getProvisionItems } from "@/lib/master";
+import { getRider, getProvisionItems } from "@/services/master";
 
 const TYPE_BADGE: Record<string, string> = {
     DISCOUNT: "bg-green-100 text-green-700",

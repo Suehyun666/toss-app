@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getCoverages, deleteCoverage } from "@/lib/master";
+import { getCoverages, deleteCoverage } from "@/services/master";
 import CoverageTable from "@/components/master/CoverageTable";
 
 export default function CoverageListPage() {

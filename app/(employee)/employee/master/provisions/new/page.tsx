@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createProvision } from "@/lib/master";
+import { createProvision } from "@/services/master";
 
 export default function ProvisionsNewPage() {
     const router = useRouter();

@@ -1,18 +1,8 @@
 'use client';
 import { useEnrollmentStore } from '@/store/enrollmentStore';
-import { useOnSaleProduct } from '@/lib/queries/products';
+import { useOnSaleProduct } from '@/queries/products';
 import type { ProductAdjustment } from '@/types/product';
 import type { SelectedAdjustment } from '@/types/enrollment';
-
-/** 상품에 adjustments가 없는 경우 기본 할인 목록 */
-const DEFAULT_DISCOUNTS: ProductAdjustment[] = [
-  { id: 1, productId: 0, itemName: '마일리지 할인',      adjType: 'DISCOUNT', rate: -0.08, conditionDesc: '연간 주행거리 기준 최대 8% 할인', sortOrder: 1 },
-  { id: 2, productId: 0, itemName: '블랙박스 할인',      adjType: 'DISCOUNT', rate: -0.02, conditionDesc: '블랙박스 장착 차량 2% 할인', sortOrder: 2 },
-  { id: 3, productId: 0, itemName: '첨단안전장치 할인',  adjType: 'DISCOUNT', rate: -0.015, conditionDesc: 'AEB·LDWS 장착 차량 1.5% 할인', sortOrder: 3 },
-  { id: 4, productId: 0, itemName: '티맵 안전운전 할인', adjType: 'DISCOUNT', rate: -0.012, conditionDesc: '티맵 안전운전 점수 70점 이상 1.2% 할인', sortOrder: 4 },
-  { id: 5, productId: 0, itemName: '대중교통 이용 할인', adjType: 'DISCOUNT', rate: -0.03,  conditionDesc: '월 10회 이상 대중교통 이용 3.0% 할인', sortOrder: 5 },
-  { id: 6, productId: 0, itemName: '자녀 할인',          adjType: 'DISCOUNT', rate: -0.005, conditionDesc: '만 7세 이하 자녀 있는 계약자 0.5% 할인', sortOrder: 6 },
-];
 
 export default function Step08Discounts() {
   const { productId, selectedAdjustments, toggleAdjustment, nextStep, prevStep } = useEnrollmentStore();
@@ -24,7 +14,7 @@ export default function Step08Discounts() {
         .filter((a) => a.adjType === 'DISCOUNT' || a.rate < 0)
         .sort((a, b) => a.sortOrder - b.sortOrder);
     }
-    return DEFAULT_DISCOUNTS;
+    return [];
   })();
 
   const isSelected = (itemName: string) =>
@@ -47,39 +37,43 @@ export default function Step08Discounts() {
       </div>
 
       <div className="flex flex-col gap-3">
-        {discounts.map((adj) => {
-          const selected = isSelected(adj.itemName);
-          return (
-            <div
-              key={adj.id}
-              onClick={() => handleToggle(adj)}
-              className={`flex items-start justify-between p-4 border rounded-xl cursor-pointer transition-colors ${
-                selected ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
-              }`}
-            >
-              <div className="flex-1 pr-3">
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-medium">{adj.itemName}</p>
-                  <span className="text-xs text-green-600 font-semibold">
-                    {Math.abs(adj.rate * 100).toFixed(1)}% 할인
-                  </span>
-                </div>
-                {adj.conditionDesc && (
-                  <p className="text-xs text-gray-500 mt-0.5">{adj.conditionDesc}</p>
-                )}
-              </div>
+        {discounts.length === 0 ? (
+          <p className="text-gray-400 text-sm py-4">적용 가능한 할인 특약이 없습니다.</p>
+        ) : (
+          discounts.map((adj) => {
+            const selected = isSelected(adj.itemName);
+            return (
               <div
-                className={`relative w-11 h-6 rounded-full flex-shrink-0 mt-0.5 transition-colors ${
-                  selected ? 'bg-blue-500' : 'bg-gray-200'
+                key={adj.id}
+                onClick={() => handleToggle(adj)}
+                className={`flex items-start justify-between p-4 border rounded-xl cursor-pointer transition-colors ${
+                  selected ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
                 }`}
               >
-                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
-                  selected ? 'translate-x-5' : 'translate-x-0.5'
-                }`} />
+                <div className="flex-1 pr-3">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium">{adj.itemName}</p>
+                    <span className="text-xs text-green-600 font-semibold">
+                      {Math.abs(adj.rate * 100).toFixed(1)}% 할인
+                    </span>
+                  </div>
+                  {adj.conditionDesc && (
+                    <p className="text-xs text-gray-500 mt-0.5">{adj.conditionDesc}</p>
+                  )}
+                </div>
+                <div
+                  className={`relative w-11 h-6 rounded-full flex-shrink-0 mt-0.5 transition-colors ${
+                    selected ? 'bg-blue-500' : 'bg-gray-200'
+                  }`}
+                >
+                  <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                    selected ? 'translate-x-5' : 'translate-x-0.5'
+                  }`} />
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
 
       <div className="flex gap-3">

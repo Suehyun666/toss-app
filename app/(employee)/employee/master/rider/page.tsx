@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getRiders, deleteRider } from "@/lib/master";
+import { getRiders, deleteRider } from "@/services/master";
 
 const TYPE_BADGE: Record<string, string> = {
     DISCOUNT: "bg-green-100 text-green-700",

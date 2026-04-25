@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createRider } from "@/lib/master";
+import { createRider } from "@/services/master";
 import RiderFormFields from "@/components/master/RiderFormFields";
 
 const emptyForm = () => ({

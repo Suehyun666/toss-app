@@ -6,7 +6,7 @@ import ExclusionListEditor from "./ExclusionListEditor";
 import RequiredCoveragesSelector from "./RequiredCoveragesSelector";
 import LimitOptionEditor from "./LimitOptionEditor";
 import CommonExclusionPicker from "./CommonExclusionPicker";
-import { getProvisionItems } from "@/lib/master";
+import { getProvisionItems } from "@/services/master";
 
 const L = "block text-xs font-medium text-gray-500 mb-1";
 const I = "w-full border border-gray-200 rounded-md px-2.5 py-[7px] text-sm outline-none focus:border-blue-500 bg-white";

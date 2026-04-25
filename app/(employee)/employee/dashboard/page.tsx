@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { getProducts } from "@/lib/products";
+import { getProducts } from "@/services/products";
 
 export default function DashboardPage() {
     const [products, setProducts] = useState<any[]>([]);

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createExclusion } from "@/lib/master";
+import { createExclusion } from "@/services/master";
 import { EXCLUSION_TYPES } from "@/types/master";
 
 type SubItem = { label: string; content: string; isException: boolean };

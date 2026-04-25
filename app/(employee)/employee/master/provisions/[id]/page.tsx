@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getProvision, getProvisionTree, addProvisionItem, updateProvisionItem, deleteProvisionItem } from "@/lib/master";
+import { getProvision, getProvisionTree, addProvisionItem, updateProvisionItem, deleteProvisionItem } from "@/services/master";
 import { LEVEL_TYPES } from "@/types/master";
 
 // ── 레벨별 색상 ────────────────────────────────────────────────────────────

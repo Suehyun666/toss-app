@@ -1,6 +1,8 @@
 'use client';
 import { useEnrollmentStore } from '@/store/enrollmentStore';
 import { formatMoney } from '@/utils/format';
+import { StepHeader } from '@/components/common/ui/StepHeader';
+import { StepNavigation } from '@/components/common/ui/StepNavigation';
 
 function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -25,10 +27,10 @@ export default function Step05VehicleDetail() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h2 className="text-xl font-bold">차량 정보 확인</h2>
-        <p className="text-sm text-gray-500 mt-1">차량 정보를 확인하고 필요 시 수정해 주세요.</p>
-      </div>
+      <StepHeader 
+        title="차량 정보 확인" 
+        description="차량 정보를 확인하고 필요 시 수정해 주세요." 
+      />
 
       <div className="border rounded-xl divide-y">
         {[
@@ -77,10 +79,7 @@ export default function Step05VehicleDetail() {
         </div>
       </div>
 
-      <div className="flex gap-3">
-        <button onClick={prevStep} className="flex-1 border border-gray-300 text-gray-700 font-semibold p-4 rounded-xl">이전</button>
-        <button onClick={nextStep} className="flex-1 bg-blue-500 text-white font-semibold p-4 rounded-xl">확인</button>
-      </div>
+      <StepNavigation onPrev={prevStep} onNext={nextStep} />
     </div>
   );
 }

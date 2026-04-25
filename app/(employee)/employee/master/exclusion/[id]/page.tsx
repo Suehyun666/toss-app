@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getExclusions } from "@/lib/master";
+import { getExclusions } from "@/services/master";
 import { EXCLUSION_TYPES } from "@/types/master";
 import Link from "next/link";
 

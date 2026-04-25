@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createBaseRate } from "@/lib/master";
+import { createBaseRate } from "@/services/master";
 import { RATE_TYPES } from "@/types/master";
 
 // 요율 종류별 dimension1/dimension2 힌트
