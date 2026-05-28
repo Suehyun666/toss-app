@@ -19,7 +19,7 @@ export function setAuthFailureHandler(handler: AuthFailureHandler) {
 }
 
 function handleAuthFailure() {
-    ["is_logged_in", "user_role", "access_token", "refresh_token"].forEach(
+    ["is_logged_in", "user_role", "access_token", "refresh_token", "identity_verify_token"].forEach(
         k => (document.cookie = `${k}=; path=/; max-age=0`)
     );
     if (authFailureHandler) {

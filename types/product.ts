@@ -1,12 +1,25 @@
+export interface LimitOptionDetail {
+  id: number;
+  detailType: string;   // TOTAL | DEATH | INJURY | DISABILITY
+  amount: number | null; // null = 무한
+}
+
+export interface LimitOption {
+  id: number;
+  optionName: string;
+  isDefault: boolean;
+  details: LimitOptionDetail[];
+}
+
 export interface ProductCoverage {
   id: number;
   productId: number;
   coverageMasterId: number;
   coverageName: string;
   coverageType: string;
-  basePremium: number;
   mandatory: boolean;
   sortOrder: number;
+  limitOptions: LimitOption[];
 }
 
 export interface ProductRider {
@@ -16,21 +29,13 @@ export interface ProductRider {
   riderName: string;
   riderCode: string;
   description: string | null;
+  riderType: string;         // DISCOUNT | ADD_ON
+  discountRate: number | null;
   isDefault: boolean;
   sortOrder: number;
 }
 
-export interface ProductAdjustment {
-  id: number;
-  productId: number;
-  itemName: string;
-  adjType: string;
-  rate: number;
-  conditionDesc: string;
-  sortOrder: number;
-}
-
-/** 고객 화면 - 상품 목록 카드 (담보·특약·할인 제외) */
+/** 고객 화면 - 상품 목록 카드 */
 export interface ProductCatalogItem {
   id: number;
   productCode: string;
@@ -43,11 +48,10 @@ export interface ProductCatalogItem {
   description: string;
 }
 
-/** 고객 화면 - 상품 상세 / 가입 화면 (담보·특약·할인 포함) */
+/** 고객 화면 - 상품 상세 / 가입 화면 */
 export interface ProductCatalogDetail extends ProductCatalogItem {
   coverages: ProductCoverage[];
   riders: ProductRider[];
-  adjustments: ProductAdjustment[];
 }
 
 /** @deprecated Use ProductCatalogItem or ProductCatalogDetail */
@@ -72,3 +76,17 @@ export const STATUS_OPTIONS = [
     { value: "ON_SALE",        label: "판매 중" },
     { value: "DISCONTINUED",   label: "판매 중단" },
 ] as const;
+
+export interface ProductFormInfo {
+  productCode: string;
+  productName: string;
+  lineOfBusiness: string;
+  targetCustomer: string;
+  saleStartDate: string;
+  saleEndDate: string;
+  status: string;
+  description: string;
+}
+
+// coverageMasterId → Set<limitOptionId>
+export type SelCoverages = Record<number, Set<number>>;

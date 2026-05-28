@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { clearSession } from '@/queries/auth';
 
 function getCookie(name: string) {
   if (typeof document === 'undefined') return null;
@@ -23,9 +24,7 @@ export default function Header() {
   if (role === 'EMPLOYEE' || role === 'ADMIN') return null;
 
   const handleLogout = () => {
-    ['is_logged_in', 'user_role', 'access_token'].forEach(k => {
-      document.cookie = `${k}=; path=/; max-age=0`;
-    });
+    clearSession();
     window.location.href = '/';
   };
 

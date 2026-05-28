@@ -4,44 +4,9 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { setAuthFailureHandler } from "@/queries/api";
+import { clearSession } from "@/queries/auth";
+import { EMPLOYEE_MENU } from "@/constants/employeeMenu";
 
-const menu = [
-    {
-        label: "홈",
-        href: "/employee/dashboard",
-        children: [],
-    },
-    {
-        label: "기준정보관리",
-        href: "/employee/master",
-        children: [
-            { label: "기초율",        href: "/employee/master/base-rate" },
-            { label: "담보",          href: "/employee/master/coverage" },
-            { label: "특약",          href: "/employee/master/rider" },
-            { label: "공통 면책사유", href: "/employee/master/exclusion" },
-            { label: "표준약관조항",  href: "/employee/master/provisions" },
-        ],
-    },
-    {
-        label: "상품관리",
-        href: "/employee/products",
-        children: [
-            { label: "상품목록", href: "/employee/products",              exact: true },
-            { label: "요율확인", href: "/employee/products/rate-check" },
-            { label: "인가신청", href: "/employee/products/license" },
-            { label: "판매신청", href: "/employee/products/sales" },
-        ],
-    },
-    {
-        label: "계약관리",
-        href: "/employee/contracts",
-        children: [
-            { label: "계약 목록",  href: "/employee/contracts",          exact: true },
-            { label: "청약 심사",  href: "/employee/contracts/pending" },
-            { label: "계약 조회",  href: "/employee/contracts/search" },
-        ],
-    },
-];
 
 export default function EmployeeLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -60,7 +25,7 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
                     <p className="text-xs text-gray-400 mt-0.5">직원 포털</p>
                 </div>
                 <nav className="flex-1 py-4 overflow-y-auto">
-                    {menu.map((item) => {
+                    {EMPLOYEE_MENU.map((item) => {
                         const parentActive = item.children.length > 0
                             ? pathname.startsWith(item.href)
                             : pathname === item.href;
@@ -103,9 +68,7 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
                 <div className="px-6 py-4 border-t border-gray-100">
                     <button
                         onClick={() => {
-                            document.cookie = "is_logged_in=; max-age=0; path=/";
-                            document.cookie = "user_role=; max-age=0; path=/";
-                            document.cookie = "access_token=; max-age=0; path=/";
+                            clearSession();
                             window.location.href = "/auth/login";
                         }}
                         className="text-xs text-gray-400 hover:text-red-500 transition-colors"

@@ -7,7 +7,7 @@ import { getProduct, deleteProduct } from "@/queries/products";
 import ProductBasicInfo    from "../_components/ProductBasicInfo";
 import ProductCoverages    from "../_components/ProductCoverages";
 import ProductRiders       from "../_components/ProductRiders";
-import ProductAdjustments  from "../_components/ProductAdjustments";
+
 
 const STATUS_META: Record<string, { label: string; color: string; bg: string }> = {
     DESIGNING:      { label: "설계 중",        color: "text-gray-600",   bg: "bg-gray-100" },
@@ -77,7 +77,6 @@ export default function ProductDetailPage() {
             <ProductBasicInfo   product={product} />
             <ProductCoverages   coverages={product.coverages} />
             <ProductRiders      riders={product.riders} />
-            <ProductAdjustments adjustments={product.adjustments} />
         </div>
     );
 }

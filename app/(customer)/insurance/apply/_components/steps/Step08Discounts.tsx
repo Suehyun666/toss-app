@@ -1,30 +1,25 @@
 'use client';
 import { useEnrollmentStore } from '@/store/enrollmentStore';
 import { useOnSaleProduct } from '@/queries/products';
-import type { ProductAdjustment } from '@/types/product';
+import type { ProductRider } from '@/types/product';
 import type { SelectedAdjustment } from '@/types/enrollment';
 
 export default function Step08Discounts() {
   const { productId, selectedAdjustments, toggleAdjustment, nextStep, prevStep } = useEnrollmentStore();
   const { data: product } = useOnSaleProduct(productId);
 
-  const discounts: ProductAdjustment[] = (() => {
-    if (product?.adjustments?.length) {
-      return product.adjustments
-        .filter((a) => a.adjType === 'DISCOUNT' || a.rate < 0)
-        .sort((a, b) => a.sortOrder - b.sortOrder);
-    }
-    return [];
-  })();
+  const discountRiders: ProductRider[] = (product?.riders ?? [])
+    .filter((r) => r.riderType === 'DISCOUNT')
+    .sort((a, b) => a.sortOrder - b.sortOrder);
 
-  const isSelected = (itemName: string) =>
-    selectedAdjustments.some((a) => a.itemName === itemName);
+  const isSelected = (riderName: string) =>
+    selectedAdjustments.some((a) => a.itemName === riderName);
 
-  const handleToggle = (adj: ProductAdjustment) => {
+  const handleToggle = (rider: ProductRider) => {
     const selected: SelectedAdjustment = {
-      itemName: adj.itemName,
-      adjType: adj.adjType,
-      rate: adj.rate,
+      itemName: rider.riderName,
+      adjType: 'DISCOUNT',
+      rate: rider.discountRate ?? 0,
     };
     toggleAdjustment(selected);
   };
@@ -37,28 +32,30 @@ export default function Step08Discounts() {
       </div>
 
       <div className="flex flex-col gap-3">
-        {discounts.length === 0 ? (
+        {discountRiders.length === 0 ? (
           <p className="text-gray-400 text-sm py-4">적용 가능한 할인 특약이 없습니다.</p>
         ) : (
-          discounts.map((adj) => {
-            const selected = isSelected(adj.itemName);
+          discountRiders.map((rider) => {
+            const selected = isSelected(rider.riderName);
             return (
               <div
-                key={adj.id}
-                onClick={() => handleToggle(adj)}
+                key={rider.id}
+                onClick={() => handleToggle(rider)}
                 className={`flex items-start justify-between p-4 border rounded-xl cursor-pointer transition-colors ${
                   selected ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
                 }`}
               >
                 <div className="flex-1 pr-3">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium">{adj.itemName}</p>
-                    <span className="text-xs text-green-600 font-semibold">
-                      {Math.abs(adj.rate * 100).toFixed(1)}% 할인
-                    </span>
+                    <p className="text-sm font-medium">{rider.riderName}</p>
+                    {rider.discountRate != null && (
+                      <span className="text-xs text-green-600 font-semibold">
+                        {(rider.discountRate * 100).toFixed(1)}% 할인
+                      </span>
+                    )}
                   </div>
-                  {adj.conditionDesc && (
-                    <p className="text-xs text-gray-500 mt-0.5">{adj.conditionDesc}</p>
+                  {rider.description && (
+                    <p className="text-xs text-gray-500 mt-0.5">{rider.description}</p>
                   )}
                 </div>
                 <div

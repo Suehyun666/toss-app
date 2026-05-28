@@ -131,3 +131,24 @@ export function useUpdateProduct() {
     },
   });
 }
+
+export function useCreateProduct() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: any) => createProduct(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+  });
+}
+
+export function useMasterData() {
+  return useQuery({
+    queryKey: ['master-data'],
+    queryFn: async () => {
+      const [coverages, riders] = await Promise.all([getCoverages(), getRiders()]);
+      return { coverages, riders };
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+}

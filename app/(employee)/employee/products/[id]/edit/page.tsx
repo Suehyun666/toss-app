@@ -5,12 +5,13 @@ import { useParams, useRouter } from "next/navigation";
 import { useProductEditData, useUpdateProduct } from "@/queries/products";
 import { useProductEditForm } from "@/hooks/useProductEditForm";
 import { StepIndicator } from "@/components/common/ui/StepIndicator";
-import { Step0BasicInfo } from "./_components/Step0BasicInfo";
-import { Step1Coverages } from "./_components/Step1Coverages";
-import { Step2Riders } from "./_components/Step2Riders";
-import { Step3Adjustments } from "./_components/Step3Adjustments";
+import { PRODUCT_WIZARD_STEPS } from "@/constants/product";
+import { SelCoverages } from "@/types/product";
+import { Step0BasicInfo } from "../../_components/steps/Step0BasicInfo";
+import { Step1Coverages } from "../../_components/steps/Step1Coverages";
+import { Step2Riders } from "../../_components/steps/Step2Riders";
 
-const STEPS = ["기본정보", "담보 선택", "특약 선택", "할인·할증"];
+const STEPS = [...PRODUCT_WIZARD_STEPS];
 
 export default function ProductEditPage() {
     const { id } = useParams();
@@ -27,34 +28,27 @@ export default function ProductEditPage() {
         if (!data) return;
         const { product: p } = data;
         form.setInfo({
-            productCode:      p.productCode ?? "",
-            productName:      p.productName ?? "",
-            lineOfBusiness:   p.lineOfBusiness ?? "PERSONAL_AUTO",
-            targetCustomer:   p.targetCustomer ?? "",
-            saleStartDate:    p.saleStartDate ?? "",
-            saleEndDate:      p.saleEndDate ?? "",
-            status:           p.status ?? "DESIGNING",
-            description:      p.description ?? "",
+            productCode:    p.productCode ?? "",
+            productName:    p.productName ?? "",
+            lineOfBusiness: p.lineOfBusiness ?? "PERSONAL_AUTO",
+            targetCustomer: p.targetCustomer ?? "",
+            saleStartDate:  p.saleStartDate ?? "",
+            saleEndDate:    p.saleEndDate ?? "",
+            status:         p.status ?? "DESIGNING",
+            description:    p.description ?? "",
         });
 
-        const covMap: Record<number, { basePremium: string; mandatory: boolean }> = {};
+        const covMap: SelCoverages = {};
         (p.coverages ?? []).forEach((c: any) => {
-            covMap[c.coverageMasterId] = {
-                basePremium: String(c.basePremium ?? ""),
-                mandatory: c.mandatory ?? false,
-            };
+            const optIds = new Set<number>(
+                (c.limitOptions ?? []).map((o: any) => o.id as number)
+            );
+            covMap[c.coverageMasterId] = optIds;
         });
         form.setSelCoverages(covMap);
 
-        form.setSelRiders(new Set((p.riders ?? []).map((r: any) => r.riderId)));
-
-        form.setAdjustments((p.adjustments ?? []).map((a: any) => ({
-            itemName:     a.itemName ?? "",
-            adjType:      a.adjType ?? "DISCOUNT",
-            rate:         a.rate != null ? String(Math.abs(a.rate * 100)) : "",
-            conditionDesc: a.conditionDesc ?? "",
-        })));
-    }, [data, form.setInfo, form.setSelCoverages, form.setSelRiders, form.setAdjustments]);
+        form.setSelRiders(new Set((p.riders ?? []).map((r: any) => r.riderId as number)));
+    }, [data, form.setInfo, form.setSelCoverages, form.setSelRiders]);
 
     const handleSubmit = async () => {
         form.setError("");
@@ -64,21 +58,13 @@ export default function ProductEditPage() {
                 data: {
                     ...form.info,
                     saleEndDate: form.info.saleEndDate || null,
-                    coverages: Object.entries(form.selCoverages).map(([cid, c], idx) => ({
+                    coverages: Object.entries(form.selCoverages).map(([cid, opts], idx) => ({
                         coverageMasterId: Number(cid),
-                        basePremium: Number(c.basePremium) || 0,
-                        mandatory: c.mandatory,
+                        limitOptionIds: Array.from(opts),
                         sortOrder: idx,
                     })),
                     riders: Array.from(form.selRiders).map((rid, idx) => ({
                         riderId: rid, isDefault: false, sortOrder: idx,
-                    })),
-                    adjustments: form.adjustments.filter(a => a.itemName.trim()).map((a, idx) => ({
-                        itemName: a.itemName,
-                        adjType: a.adjType,
-                        rate: Number(a.rate) / 100,
-                        conditionDesc: a.conditionDesc || null,
-                        sortOrder: idx,
                     })),
                 }
             });
@@ -104,9 +90,21 @@ export default function ProductEditPage() {
 
             <div className="bg-white border border-gray-200 rounded-xl p-6">
                 {form.step === 0 && <Step0BasicInfo info={form.info} setInfo={form.setInfo} />}
-                {form.step === 1 && <Step1Coverages allCoverages={data?.coverages ?? []} selCoverages={form.selCoverages} toggleCoverage={form.toggleCoverage} setSelCoverages={form.setSelCoverages} />}
-                {form.step === 2 && <Step2Riders allRiders={data?.riders ?? []} selRiders={form.selRiders} toggleRider={form.toggleRider} />}
-                {form.step === 3 && <Step3Adjustments info={form.info} selCoverages={form.selCoverages} selRiders={form.selRiders} adjustments={form.adjustments} setAdj={form.setAdj} addAdj={form.addAdj} removeAdj={form.removeAdj} />}
+                {form.step === 1 && (
+                    <Step1Coverages
+                        allCoverages={data?.coverages ?? []}
+                        selCoverages={form.selCoverages}
+                        toggleCoverage={form.toggleCoverage}
+                        toggleOption={form.toggleOption}
+                    />
+                )}
+                {form.step === 2 && (
+                    <Step2Riders
+                        allRiders={data?.riders ?? []}
+                        selRiders={form.selRiders}
+                        toggleRider={form.toggleRider}
+                    />
+                )}
             </div>
 
             <div className="flex justify-between mt-4">

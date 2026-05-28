@@ -1,17 +1,38 @@
 'use client';
+
 import { useState } from 'react';
 import { useEnrollmentStore } from '@/store/enrollmentStore';
 import { fetchApi } from '@/queries/api';
-
 import { VERIFICATION_METHODS } from '@/types/enrollmentConstants';
+import type { VerificationMethod } from '@/types/enrollment';
 
-export default function VerifyForm() {
-  const {
-    ownerName, ownerSsnFront, ownerPhone,
-    verificationMethod, verificationSessionId,
-    setVerificationMethod, setVerificationSession, setVerificationToken,
-    nextStep,
-  } = useEnrollmentStore();
+type VerifyFormProps = {
+  name?: string;
+  ssn?: string;
+  phone?: string;
+  verificationMethod?: string;
+  verificationSessionId?: string | null;
+  onVerificationMethodChange?: (method: string) => void;
+  onVerificationSessionChange?: (sessionId: string) => void;
+  onVerifiedToken?: (token: string) => void | Promise<void>;
+};
+
+export default function VerifyForm(props: VerifyFormProps = {}) {
+  const store = useEnrollmentStore();
+
+  const resolvedName = props.name ?? store.ownerName;
+  const resolvedSsn = props.ssn ?? store.ownerSsnFront;
+  const resolvedPhone = props.phone ?? store.ownerPhone;
+  const resolvedMethod = props.verificationMethod ?? store.verificationMethod;
+  const resolvedSessionId = props.verificationSessionId ?? store.verificationSessionId;
+
+  const handleMethodChange: (method: string) => void =
+    props.onVerificationMethodChange ?? ((method: string) => store.setVerificationMethod(method as VerificationMethod));
+  const handleSessionChange = props.onVerificationSessionChange ?? store.setVerificationSession;
+  const handleVerifiedToken = props.onVerifiedToken ?? ((token: string) => {
+    store.setVerificationToken(token);
+    store.nextStep();
+  });
 
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,16 +50,26 @@ export default function VerifyForm() {
     setLoading(true);
     setError('');
     try {
+      if (!resolvedName || !resolvedPhone) {
+        setError('이름과 휴대폰번호를 입력해주세요.');
+        return;
+      }
+      const digits = (resolvedSsn ?? '').replace(/\D/g, '');
+      if (digits.length !== 13) {
+        setError('주민번호 13자리를 입력해주세요.');
+        return;
+      }
+
       const data = await callProxy('/verify/send-otp', 'POST', {
-        name: ownerName,
-        ssn: ownerSsnFront,
-        phone: ownerPhone,
-        method: verificationMethod,
+        name: resolvedName,
+        ssn: digits,
+        phone: resolvedPhone,
+        method: resolvedMethod,
       });
-      setVerificationSession(data.sessionId);
+      handleSessionChange(data.sessionId);
       setSent(true);
     } catch {
-      setError('OTP 발송에 실패했습니다. 다시 시도해 주세요.');
+      setError('OTP 발송에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setLoading(false);
     }
@@ -49,12 +80,11 @@ export default function VerifyForm() {
     setError('');
     try {
       const data = await callProxy('/verify/confirm', 'POST', {
-        sessionId: verificationSessionId,
+        sessionId: resolvedSessionId,
         otp,
       });
       if (data.success) {
-        setVerificationToken(data.token);
-        nextStep();
+        await handleVerifiedToken(data.token);
       } else {
         setError(data.failureReason ?? '인증에 실패했습니다.');
       }
@@ -73,9 +103,11 @@ export default function VerifyForm() {
           {VERIFICATION_METHODS.map((m) => (
             <button
               key={m.value}
-              onClick={() => setVerificationMethod(m.value)}
+              onClick={() => handleMethodChange(m.value)}
               className={`py-2 rounded-lg text-sm font-medium border transition-colors ${
-                verificationMethod === m.value ? 'bg-blue-500 text-white border-blue-500' : 'border-gray-300 text-gray-600'
+                resolvedMethod === m.value
+                  ? 'bg-blue-500 text-white border-blue-500'
+                  : 'border-gray-300 text-gray-600'
               }`}
             >
               {m.label}
@@ -85,12 +117,16 @@ export default function VerifyForm() {
       </div>
 
       {!sent ? (
-        <button onClick={handleSend} disabled={loading} className="w-full bg-blue-500 disabled:bg-gray-300 text-white font-semibold p-4 rounded-xl">
-          {loading ? '발송 중...' : '인증번호 발송'}
+        <button
+          onClick={handleSend}
+          disabled={loading}
+          className="w-full bg-blue-500 disabled:bg-gray-300 text-white font-semibold p-4 rounded-xl"
+        >
+          {loading ? '발송 중..' : '인증번호 발송'}
         </button>
       ) : (
         <div className="flex flex-col gap-3">
-          <p className="text-sm text-green-600 font-medium">✓ 인증번호가 발송되었습니다. (테스트: 123456)</p>
+          <p className="text-sm text-green-600 font-medium">인증번호가 발송되었습니다. (테스트: 123456)</p>
           <div className="flex gap-2">
             <input
               type="text"
@@ -101,16 +137,24 @@ export default function VerifyForm() {
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
             />
-            <button onClick={handleSend} className="text-sm text-blue-500 px-3 border border-blue-400 rounded-lg whitespace-nowrap">
+            <button
+              onClick={handleSend}
+              className="text-sm text-blue-500 px-3 border border-blue-400 rounded-lg whitespace-nowrap"
+            >
               재발송
             </button>
           </div>
           {error && <p className="text-sm text-red-500">{error}</p>}
-          <button onClick={handleConfirm} disabled={otp.length !== 6 || loading} className="w-full bg-blue-500 disabled:bg-gray-300 text-white font-semibold p-4 rounded-xl">
-            {loading ? '확인 중...' : '확인'}
+          <button
+            onClick={handleConfirm}
+            disabled={otp.length !== 6 || loading}
+            className="w-full bg-blue-500 disabled:bg-gray-300 text-white font-semibold p-4 rounded-xl"
+          >
+            {loading ? '확인 중..' : '확인'}
           </button>
         </div>
       )}
+      {!!error && !sent && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

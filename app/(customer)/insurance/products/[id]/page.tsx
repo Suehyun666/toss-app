@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useOnSaleProduct } from '@/queries/products';
-import type { ProductRider, ProductAdjustment } from '@/types/product';
+import type { ProductRider } from '@/types/product';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -71,17 +71,6 @@ export default function ProductDetailPage() {
         </Section>
       )}
 
-      {/* 할인 특약 */}
-      {product.adjustments.length > 0 && (
-        <Section title="할인 특약">
-          <div className="divide-y">
-            {product.adjustments.map((a) => (
-              <AdjustmentRow key={a.id} adjustment={a} />
-            ))}
-          </div>
-        </Section>
-      )}
-
       {/* 하단 고정 버튼 */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 max-w-xl mx-auto">
         <Link
@@ -121,19 +110,3 @@ function RiderRow({ rider }: { rider: ProductRider }) {
   );
 }
 
-function AdjustmentRow({ adjustment }: { adjustment: ProductAdjustment }) {
-  const isDiscount = adjustment.adjType === 'DISCOUNT' || adjustment.rate < 0;
-  return (
-    <div className="flex items-center justify-between px-4 py-3 bg-white">
-      <div>
-        <span className="text-sm font-medium">{adjustment.itemName}</span>
-        {adjustment.conditionDesc && (
-          <p className="text-xs text-gray-400 mt-0.5">{adjustment.conditionDesc}</p>
-        )}
-      </div>
-      <span className={`text-sm font-medium ${isDiscount ? 'text-green-600' : 'text-red-500'}`}>
-        {isDiscount ? '-' : '+'}{Math.abs(adjustment.rate * 100).toFixed(1)}%
-      </span>
-    </div>
-  );
-}
